@@ -1,0 +1,34 @@
+# Use postgres/example user/password credentials
+version: '3.9'
+
+services:
+  # DB service
+  postgres:
+    image: postgres
+    restart: always
+    # set shared memory limit when using docker-compose
+    shm_size: 256mb
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: example
+    ports:
+      - "5432:5432"
+
+  #redis
+  redis:
+    image: redis:latest
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - /path/to/local/dаta:/root/redis
+      - /path/to/local/redis.conf:/usr/local/etc/redis/redis.conf
+    environment:
+      - REDIS_PORT=6379
+      - REDIS_DATABASES=16
+
+  #api
+  api:
+    build: .
+    ports:
+      - "8080:8080"
