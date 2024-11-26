@@ -1,0 +1,6 @@
+service: app
+runtime: custom
+env: flex
+
+env_variables:
+  PORT: 8080
