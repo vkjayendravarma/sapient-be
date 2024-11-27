@@ -1,7 +1,7 @@
 substitutions:
-  _ZONE: "us-central1-a"
-  _COMPUTE_INSTANCE_NAME: "instance-20241127-064052"
-  _PROJECT_ID: "bigquerysandbox-368012"
+  ZONE: "us-central1-a"
+  COMPUTE_INSTANCE_NAME: "instance-20241127-064052"
+  PROJECT_ID: "bigquerysandbox-368012"
 
 
 steps:
