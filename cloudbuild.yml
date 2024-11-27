@@ -1,6 +1,23 @@
 steps:
+  # Step 1: Build the API Docker image and push it to GCR
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/api:latest', '.']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/api:latest']
+
+  # Step 2: SSH into the Compute Engine instance and deploy the services
   - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'bash'
     args:
-      - 'app'
-      - 'deploy'
-      - '--quiet'
+      - '-c'
+      - |
+        gcloud compute ssh $COMPUTE_INSTANCE_NAME \
+        --zone $ZONE \
+        --command "sudo mkdir -p /app && sudo chmod 777 /app"
+        
+        gcloud compute scp docker-compose.yml $COMPUTE_INSTANCE_NAME:/app --zone $ZONE
+        
+        gcloud compute ssh $COMPUTE_INSTANCE_NAME \
+        --zone $ZONE \
+        --command 'cd /app && docker-compose down && docker-compose up -d'

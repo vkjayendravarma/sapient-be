@@ -4,7 +4,7 @@ version: '3.9'
 services:
   # DB service
   postgres:
-    image: postgres
+    image: gcr.io/bigquerysandbox-368012/postgres
     restart: always
     # set shared memory limit when using docker-compose
     shm_size: 256mb
@@ -16,7 +16,7 @@ services:
 
   #redis
   redis:
-    image: redis:latest
+    image: gcr.io/bigquerysandbox-368012/redis:latest
     restart: always
     ports:
       - "6379:6379"
@@ -30,5 +30,6 @@ services:
   #api
   api:
     build: .
+    image: gcr.io/bigquerysandbox-368012/api:latest
     ports:
       - "8080:8080"
