@@ -16,7 +16,13 @@ steps:
     entrypoint: 'bash'
     args:
       - '-c'
-      - |
+      - mkdir -p /builder/home/.ssh
+      - ssh-keygen -t rsa -f /builder/home/.ssh/google_compute_engine -C "vkjayendravarma@gmail.com" -N ""
+      - gcloud compute instances add-metadata ${_COMPUTE_INSTANCE_NAME} \
+      - zone=${_ZONE} \
+      - metadata-from-file ssh-keys=/builder/home/.ssh/google_compute_engine.pub
+      - gcloud compute ssh ${_COMPUTE_INSTANCE_NAME} --zone=${_ZONE} --command "echo 'SSH is working!'"
+        
         gcloud compute ssh ${_COMPUTE_INSTANCE_NAME} --zone ${_ZONE} \
         --command "sudo mkdir -p /app && sudo chmod 777 /app"
         
@@ -24,3 +30,4 @@ steps:
         
         gcloud compute ssh ${_COMPUTE_INSTANCE_NAME} --zone ${_ZONE} \
         --command 'cd /app && docker-compose down && docker-compose up -d'
+
