@@ -13,11 +13,11 @@ steps:
       - '-c'
       - |
         gcloud compute ssh instance-20241127-064052 \
-        --zone $ZONE \
+        --zone us-central1-a \
         --command "sudo mkdir -p /app && sudo chmod 777 /app"
         
         gcloud compute scp docker-compose.yml instance-20241127-064052:/app --zone $ZONE
         
         gcloud compute ssh instance-20241127-064052 \
-        --zone $ZONE \
+        --zone us-central1-a \
         --command 'cd /app && docker-compose down && docker-compose up -d'
