@@ -1,16 +1,15 @@
 substitutions:
-  ZONE: "us-central1-a"
-  COMPUTE_INSTANCE_NAME: "instance-20241127-064052"
-  PROJECT_ID: "bigquerysandbox-368012"
-
+  _ZONE: "us-central1-a"
+  _COMPUTE_INSTANCE_NAME: "instance-20241127-064052"
+  _PROJECT_ID: "bigquerysandbox-368012"
 
 steps:
   # Step 1: Build the API Docker image and push it to GCR
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/$PROJECT_ID/api:latest', '.']
+    args: ['build', '-t', 'gcr.io/${_PROJECT_ID}/api:latest', '.']
 
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/$PROJECT_ID/api:latest']
+    args: ['push', 'gcr.io/${_PROJECT_ID}/api:latest']
 
   # Step 2: SSH into the Compute Engine instance and deploy the services
   - name: 'gcr.io/cloud-builders/gcloud'
@@ -18,10 +17,10 @@ steps:
     args:
       - '-c'
       - |
-        gcloud compute ssh $COMPUTE_INSTANCE_NAME \
+        gcloud compute ssh ${_COMPUTE_INSTANCE_NAME} --zone ${_ZONE} \
         --command "sudo mkdir -p /app && sudo chmod 777 /app"
         
-        gcloud compute scp docker-compose.yml $COMPUTE_INSTANCE_NAME:/app 
+        gcloud compute scp docker-compose.yml ${_COMPUTE_INSTANCE_NAME}:/app --zone ${_ZONE}
         
-        gcloud compute ssh $COMPUTE_INSTANCE_NAME \
+        gcloud compute ssh ${_COMPUTE_INSTANCE_NAME} --zone ${_ZONE} \
         --command 'cd /app && docker-compose down && docker-compose up -d'
