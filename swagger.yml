@@ -1,0 +1,228 @@
+openapi: 3.0.3
+info:
+  title: Swagger Weather app
+  description: |-
+    This api is built by V K Jayendra Varma for sapient interview round 1, with funcitonality of weather information, login and register
+  contact:
+    email: vkjayendravarma@gmail.com
+  version: 1.0.11
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+servers:
+  - url: https://sapient-be-681215487873.us-central1.run.app
+tags:
+  - name: accounts
+    description: Everything about authetication
+  - name: weather updates
+    description: Access to weather report
+paths:
+  /api/health-check:
+    get:
+      tags:
+        - default
+      summary: healthCheck
+      responses:
+        '202':
+          description: Accepted
+
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                data: user
+                status: 200
+                success: true
+  /accounts/register:
+    post:
+      tags:
+        - accounts
+      summary: Register
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Register'
+            example:
+              name: <name>
+              username: <email>
+              password: <password>
+      responses:
+        '202':
+          description: Accepted
+
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                data: account created
+                status: 200
+                success: true
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                data: user email is already in use
+                status: 400
+                success: false
+  /accounts/login:
+    post:
+      tags:
+        - accounts
+      summary: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+            example:
+              username: <email>
+              password: <password>
+      responses:
+        '202':
+          description: Accepted
+
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                data: <token>
+                status: 200
+                success: true
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                data: Invalid credentials
+                status: 403
+                success: false
+  /weather/forecast:
+    get:
+      tags:
+        - weather updates
+      summary: Weather
+      parameters:
+        - name: city
+          in: query
+          schema:
+            type: string
+          example: bengaluru
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/Weather'
+              example:
+                data:
+                  - rainy: false
+                    windy: true
+                    sunny: false
+                    storm: false
+                    max: 22.91
+                    min: 17.44
+                    date: 1732708800
+                  - rainy: false
+                    windy: true
+                    sunny: false
+                    storm: false
+                    max: 21.83
+                    min: 17.04
+                    date: 1732752000
+                  - rainy: false
+                    windy: true
+                    sunny: false
+                    storm: false
+                    max: 22.55
+                    min: 18.36
+                    date: 1732838400
+                status: 200
+                success: true
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                data: city not found
+                status: 404
+                success: false
+components:
+  schemas:
+    Register:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The user's name
+          example: "johndoe"
+        username:
+          type: string
+          description: The user's email
+          example: "johndoe@gmail.com"
+
+        password:
+          type: string
+          description: The user's email
+          example: "johndoe@gmail.com"
+      required:
+        - name
+        - username
+        - email
+    Login:
+      type: object
+      properties:
+        username:
+          type: string
+          description: The user's email
+          example: "johndoe@gmail.com"
+
+        password:
+          type: string
+          description: The user's email
+          example: "johndoe@gmail.com"
+      required:
+        - name
+        - username
+        - email
+    Weather:
+      type: object
+      properties:
+        rainy:
+          type: boolean
+          description: rain predected that day
+        windy:
+          type: boolean
+          description: heavy wint predected that day
+        sunny:
+          type: boolean
+          description: high tempratures predected that day
+        storm:
+          type: boolean
+          description: thunderstorms predected that day
+        max:
+          type: integer
+          description: max temperature
+        min:
+          type: integer
+          description: min temperature
+        date:
+          type: integer
+          description: unix time stamp
+
+
+
