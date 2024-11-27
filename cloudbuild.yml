@@ -22,12 +22,9 @@ steps:
       - zone=${_ZONE} \
       - metadata-from-file ssh-keys=/builder/home/.ssh/google_compute_engine.pub
       - gcloud compute ssh ${_COMPUTE_INSTANCE_NAME} --zone=${_ZONE} --command "echo 'SSH is working!'"
-        
-        gcloud compute ssh ${_COMPUTE_INSTANCE_NAME} --zone ${_ZONE} \
+      - gcloud compute ssh ${_COMPUTE_INSTANCE_NAME} --zone ${_ZONE} \
         --command "sudo mkdir -p /app && sudo chmod 777 /app"
-        
-        gcloud compute scp docker-compose.yml ${_COMPUTE_INSTANCE_NAME}:/app --zone ${_ZONE}
-        
-        gcloud compute ssh ${_COMPUTE_INSTANCE_NAME} --zone ${_ZONE} \
+      - gcloud compute scp docker-compose.yml ${_COMPUTE_INSTANCE_NAME}:/app --zone ${_ZONE}
+      - gcloud compute ssh ${_COMPUTE_INSTANCE_NAME} --zone ${_ZONE} \
         --command 'cd /app && docker-compose down && docker-compose up -d'
 
